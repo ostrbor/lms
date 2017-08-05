@@ -5,7 +5,7 @@ BASE_DIR = 'lms'
 
 
 @task
-def runserver():
+def run():
     with lcd(BASE_DIR):
         local('./manage.py runserver')
 
