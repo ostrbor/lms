@@ -149,6 +149,9 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 # EMAIL_HOST_USER = get_env_var('EMAIL_HOST_USER')
 # EMAIL_HOST_PASSWORD = get_env_var('EMAIL_HOST_PASSWORD')
+# TODO: change to production values
+EMAIL_HOST_USER = 'noreply@mydomain.com'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # CELERY SETTINGS
 BROKER_URL = 'amqp://guest:guest@rabbitmq:5672//'
@@ -172,10 +175,10 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.NullHandler',
         },
-        'signals': {
+        'tasks': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(REPO_DIR, "logs/signals.log"),
+            'filename': os.path.join(REPO_DIR, "logs/tasks.log"),
             'maxBytes': 5 * 10**6,
             'backupCount': 5,
             'formatter': 'standard',
@@ -197,8 +200,8 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
-        'auction.signals': {
-            'handlers': ['signals', 'console'],
+        'auction.tasks': {
+            'handlers': ['tasks', 'console'],
             'level': 'DEBUG',
         },
     }
