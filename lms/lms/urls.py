@@ -1,18 +1,3 @@
-"""lms URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/1.11/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.conf.urls import url, include
-    2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
-"""
 from django.conf.urls import url, include
 from auction.views import AuctionList, AuctionDetail, BidCreate, UserCreate
 from rest_framework.authtoken import views
@@ -20,9 +5,11 @@ from rest_framework.authtoken import views
 # TODO: comment first urlpattern (use for debugging)
 urlpatterns = [
     url(r'^', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^user/$', UserCreate.as_view()),
-    url(r'^token/', views.obtain_auth_token),
-    url(r'^auctions/$', AuctionList.as_view()),
-    url(r'^auctions/(?P<pk>[0-9]+)/$', AuctionDetail.as_view()),
-    url(r'^auctions/(?P<pk>[0-9]+)/bids$', BidCreate.as_view()),
+    url(r'^user/$', UserCreate.as_view(), name='user'),
+    url(r'^token/', views.obtain_auth_token, name='token'),
+    url(r'^auctions/$', AuctionList.as_view(), name='auction-list'),
+    url(r'^auctions/(?P<pk>[0-9]+)/$',
+        AuctionDetail.as_view(),
+        name='auction-detail'),
+    url(r'^auctions/(?P<pk>[0-9]+)/bids$', BidCreate.as_view(), name='bid'),
 ]
