@@ -50,6 +50,7 @@ INSTALLED_APPS = [
 
     # third-party apps
     'rest_framework',
+    'django_filters',
 
     # my apps
     'auction',
@@ -137,6 +138,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS':
+    ('django_filters.rest_framework.DjangoFilterBackend', )
+}
 
 # TODO: change backend for production
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

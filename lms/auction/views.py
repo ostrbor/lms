@@ -7,6 +7,7 @@ from rest_framework import generics
 class AuctionList(generics.ListCreateAPIView):
     queryset = Auction.objects.all()
     serializer_class = AuctionListSerializer
+    filter_fields = ('is_opened', )
 
 
 class AuctionDetail(generics.RetrieveAPIView):
