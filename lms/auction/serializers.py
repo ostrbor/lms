@@ -1,4 +1,4 @@
-from auction.models import Auction, Bid
+from auction.models import Auction, Bid, User
 from rest_framework import serializers
 
 
@@ -22,3 +22,11 @@ class AuctionDetailSerializer(AuctionListSerializer):
 
     class Meta(AuctionListSerializer.Meta):
         fields = AuctionListSerializer.Meta.fields + ('bids', )
+
+
+class UserSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
+
+    class Meta:
+        model = User
+        fields = ('username', 'password', 'email')
