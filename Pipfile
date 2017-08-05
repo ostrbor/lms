@@ -4,5 +4,7 @@ verify_ssl = true
 
 [packages]
 celery = "*"
-Django = "*"
 djangorestframework = "*"
+ipython = "*"
+Django = "*"
+django-extensions = "*"

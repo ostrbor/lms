@@ -41,6 +41,9 @@ INSTALLED_APPS = [
 
     # my apps
     'auction',
+
+    # for debugging
+    'django_extensions',
 ]
 
 MIDDLEWARE = [

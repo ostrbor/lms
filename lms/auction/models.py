@@ -9,8 +9,9 @@ class Auction(models.Model):
     current_price = models.PositiveIntegerField()
     price_step = models.PositiveIntegerField()
     close_at = models.DateTimeField()
-    owner = models.ForeignKey(User)
-    winner = models.ForeignKey(User, null=True, blank=True)
+    owner = models.ForeignKey(User, related_name='owner')
+    winner = models.ForeignKey(
+        User, null=True, blank=True, related_name='winner')
     is_opened = models.BooleanField(default=True)
 
 
