@@ -1,0 +1,54 @@
+[
+{
+  "model": "auction.auction",
+  "pk": 1,
+  "fields": {
+    "title": "Junkbox with retro music",
+    "current_price": 150000,
+    "price_step": 10000,
+    "close_at": "2017-08-15T00:00:00Z",
+    "owner": 1,
+    "winner": null,
+    "is_opened": true
+  }
+},
+{
+  "model": "auction.auction",
+  "pk": 2,
+  "fields": {
+    "title": "Old shoes",
+    "current_price": 80000,
+    "price_step": 30000,
+    "close_at": "2017-08-09T00:00:00Z",
+    "owner": 2,
+    "winner": null,
+    "is_opened": true
+  }
+},
+{
+  "model": "auction.auction",
+  "pk": 3,
+  "fields": {
+    "title": "Karamba",
+    "current_price": 10000,
+    "price_step": 1000,
+    "close_at": "2017-08-09T00:00:00Z",
+    "owner": 2,
+    "winner": null,
+    "is_opened": true
+  }
+},
+{
+  "model": "auction.auction",
+  "pk": 4,
+  "fields": {
+    "title": "Moon",
+    "current_price": 500000,
+    "price_step": 100000,
+    "close_at": "2017-08-10T00:00:00Z",
+    "owner": 3,
+    "winner": null,
+    "is_opened": true
+  }
+}
+]
