@@ -173,7 +173,7 @@ LOGGING = {
         'signals': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(REPO_DIR, "/logs/signals.log"),
+            'filename': os.path.join(REPO_DIR, "logs/signals.log"),
             'maxBytes': 5 * 10**6,
             'backupCount': 5,
             'formatter': 'standard',
