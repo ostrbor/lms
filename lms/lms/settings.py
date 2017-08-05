@@ -50,7 +50,6 @@ INSTALLED_APPS = [
 
     # third-party apps
     'rest_framework',
-    'djcelery_email',
 
     # my apps
     'auction',
@@ -141,7 +140,6 @@ STATIC_URL = '/static/'
 
 # TODO: change backend for production
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
 
 # MAIL SETTINGS
 EMAIL_USE_TLS = True

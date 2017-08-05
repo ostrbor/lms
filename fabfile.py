@@ -23,4 +23,9 @@ def migrate():
 
 @task
 def shell():
-    local(f'python {BASE_DIR}/manage.py shell_plus --ipython')
+    local(f'python {BASE_DIR}/manage.py shell_plus')
+
+
+@task
+def test():
+    local(f'python {BASE_DIR}/manage.py test')
