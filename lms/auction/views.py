@@ -1,7 +1,7 @@
 from auction.models import Auction, Bid
 from auction.serializers import (AuctionListSerializer, BidSerializer,
                                  AuctionDetailSerializer,
-                                 AuctionCreateSerializer)
+                                 AuctionBaseSerializer)
 from rest_framework import generics
 
 
@@ -11,7 +11,7 @@ class AuctionList(generics.ListCreateAPIView):
     filter_fields = ('is_opened', )
 
     list_serializer = AuctionListSerializer
-    create_serializer = AuctionCreateSerializer
+    create_serializer = AuctionBaseSerializer
 
     def list(self, *args, **kwargs):
         self.serializer_class = self.list_serializer
