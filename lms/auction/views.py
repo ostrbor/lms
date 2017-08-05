@@ -1,3 +1,17 @@
-from django.shortcuts import render
+from auction.models import Auction, Bid
+from auction.serializers import AuctionSerializer, BidSerializer
+from rest_framework import generics
 
-# Create your views here.
+
+class AuctionList(generics.ListCreateAPIView):
+    queryset = Auction.objects.all()
+    serializer_class = AuctionSerializer
+
+
+class AuctionDetail(generics.RetrieveAPIView):
+    queryset = Auction.objects.all()
+    serializer_class = AuctionSerializer
+
+
+class BidCreate(generics.CreateAPIView):
+    serializer_class = BidSerializer
