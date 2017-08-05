@@ -144,8 +144,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = get_env_var('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = get_env_var('EMAIL_HOST_PASSWORD')
+# EMAIL_HOST_USER = get_env_var('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = get_env_var('EMAIL_HOST_PASSWORD')
 
 # CELERY SETTINGS
 BROKER_URL = 'amqp://guest:guest@rabbitmq:5672//'
@@ -154,3 +154,49 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'standard': {
+            'format': "%(asctime)s %(levelname)s %(name)s %(message)s",
+            'datefmt': "%d-%m-%Y %H:%M:%S"
+        },
+    },
+    'handlers': {
+        'null': {
+            'level': 'DEBUG',
+            'class': 'logging.NullHandler',
+        },
+        'signals': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, "/logs/signals.log"),
+            'maxBytes': 5 * 10**6,
+            'backupCount': 5,
+            'formatter': 'standard',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard'
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level': 'WARN',
+        },
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'auction.signals': {
+            'handlers': ['signals', 'console'],
+            'level': 'DEBUG',
+        },
+    }
+}
