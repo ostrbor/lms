@@ -8,7 +8,8 @@ from auction.tasks import notify_new_bid, notify_open_auction
 def auction(sender, instance, created, **kwargs):
     emails = User.objects.filter(is_active=True).values_list(
         'email', flat=True)
+    # TODO: use delay to use async version of task
     if created:
         notify_open_auction(instance.title, list(emails))
     else:
-        notify_new_bid(instance.price, list(emails))
+        notify_new_bid(instance.title, instance.current_price, list(emails))

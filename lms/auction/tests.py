@@ -15,7 +15,9 @@ class SignalsTestCase(TestCase):
             price_step=1,
             close_at=close_at,
             owner=owner).create()
+        # New auction is created
         self.assertTrue(mock.called)
+        # New bid is made
         auction.current_price = 11
         auction.save()
         self.assertEqual(mock.call_count, 2)
