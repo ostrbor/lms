@@ -6,5 +6,6 @@ verify_ssl = true
 celery = "*"
 djangorestframework = "*"
 ipython = "*"
-Django = "*"
 django-extensions = "*"
+Django = "*"
+Fabric3 = "*"
