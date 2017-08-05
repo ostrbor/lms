@@ -2,21 +2,19 @@ from auction.models import Auction, Bid
 from rest_framework import serializers
 
 
-class AuctionBaseSerializer(serializers.ModelSerializer):
+class AuctionListSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+
     class Meta:
         model = Auction
-        fields = ('id', 'title', 'current_price', 'price_step', 'close_at')
-
-
-class AuctionListSerializer(AuctionBaseSerializer):
-    class Meta(AuctionBaseSerializer.Meta):
-        fields = AuctionBaseSerializer.Meta.fields + ('owner', )
+        fields = ('id', 'title', 'current_price', 'price_step', 'close_at',
+                  'owner')
 
 
 class BidSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bid
-        fields = ('id', 'price', 'auction', 'user')
+        fields = ('id', 'price', 'auction')
 
 
 class AuctionDetailSerializer(AuctionListSerializer):
