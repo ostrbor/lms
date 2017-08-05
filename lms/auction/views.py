@@ -1,7 +1,16 @@
-from auction.models import Auction, Bid
+from auction.models import Auction, Bid, User
 from auction.serializers import (AuctionListSerializer, BidSerializer,
-                                 AuctionDetailSerializer)
+                                 AuctionDetailSerializer, UserSerializer)
 from rest_framework import generics
+from rest_framework.permissions import AllowAny
+
+
+class UserCreate(generics.CreateAPIView):
+    serializer_class = UserSerializer
+    permission_classes = (AllowAny, )
+
+    def perform_create(self, serializer):
+        User.objects.create_user(**serializer.validated_data)
 
 
 class AuctionList(generics.ListCreateAPIView):
