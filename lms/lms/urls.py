@@ -14,9 +14,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-from auction.views import AuctionList, AuctionDetail
+from auction.views import AuctionList, AuctionDetail, BidCreate
 
 urlpatterns = [
     url(r'^auctions/$', AuctionList.as_view()),
     url(r'^auctions/(?P<pk>[0-9]+)/$', AuctionDetail.as_view()),
+    url(r'^auctions/(?P<pk>[0-9]+)/bids$', BidCreate.as_view()),
 ]
