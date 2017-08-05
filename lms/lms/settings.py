@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     # third-party apps
     'rest_framework',
     'django_filters',
+    'rest_framework.authtoken',
 
     # my apps
     'auction',
@@ -139,9 +140,15 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# TODO: comment session authentication (use for debugging)
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS':
-    ('django_filters.rest_framework.DjangoFilterBackend', )
+    ('django_filters.rest_framework.DjangoFilterBackend', ),
+    'DEFAULT_AUTHENTICATION_CLASSES':
+    ('rest_framework.authentication.TokenAuthentication',
+     'rest_framework.authentication.SessionAuthentication', ),
+    'DEFAULT_PERMISSION_CLASSES':
+    ('rest_framework.permissions.IsAuthenticated', ),
 }
 
 # TODO: change backend for production
