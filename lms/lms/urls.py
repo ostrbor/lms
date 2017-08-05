@@ -13,10 +13,15 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
-from auction.views import AuctionList, AuctionDetail, BidCreate
+from django.conf.urls import url, include
+from auction.views import AuctionList, AuctionDetail, BidCreate, UserCreate
+from rest_framework.authtoken import views
 
+# TODO: comment first urlpattern (use for debugging)
 urlpatterns = [
+    url(r'^', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^user/$', UserCreate.as_view()),
+    url(r'^token/', views.obtain_auth_token),
     url(r'^auctions/$', AuctionList.as_view()),
     url(r'^auctions/(?P<pk>[0-9]+)/$', AuctionDetail.as_view()),
     url(r'^auctions/(?P<pk>[0-9]+)/bids$', BidCreate.as_view()),
