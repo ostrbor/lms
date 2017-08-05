@@ -14,6 +14,9 @@ class Auction(models.Model):
         User, null=True, blank=True, related_name='winner')
     is_opened = models.BooleanField(default=True, db_index=True)
 
+    def __str__(self):
+        return f'{self.title}'
+
 
 class Bid(models.Model):
     price = models.PositiveIntegerField()
