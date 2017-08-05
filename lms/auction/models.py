@@ -5,14 +5,14 @@ User = get_user_model()
 
 
 class Auction(models.Model):
-    item_description = models.CharField(max_length=200)
+    title = models.CharField(max_length=200)
     current_price = models.PositiveIntegerField()
     price_step = models.PositiveIntegerField()
     close_at = models.DateTimeField()
     owner = models.ForeignKey(User, related_name='owner')
     winner = models.ForeignKey(
         User, null=True, blank=True, related_name='winner')
-    is_opened = models.BooleanField(default=True)
+    is_opened = models.BooleanField(default=True, db_index=True)
 
 
 class Bid(models.Model):
