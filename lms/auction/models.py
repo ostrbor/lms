@@ -32,7 +32,7 @@ class Auction(models.Model):
 
 class Bid(models.Model):
     price = models.DecimalField(max_digits=11, decimal_places=2)
-    auction = models.ForeignKey(Auction)
+    auction = models.ForeignKey(Auction, related_name='bids')
     user = models.ForeignKey(User)
 
     @atomic

@@ -2,24 +2,26 @@ from auction.models import Auction, User
 from rest_framework.authtoken.models import Token
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from auction.tasks import notify_new_bid, notify_open_auction
+from auction.tasks import notify_new_bid, notify_open_auction, notify_close_auction
 
 
-def notify_auction_handler(item_description, current_price, emails, created):
+def notify_auction_handler(instance, emails, created):
     # moved from receiver for testing
     # TODO: use delay to use async version of task
+    descr = instance.item_description
     if created:
-        notify_open_auction(item_description, emails)
-    else:
-        notify_new_bid(item_description, current_price, emails)
+        notify_open_auction(descr, emails)
+    elif instance.is_opened:
+        notify_new_bid(descr, instance.current_price, emails)
+    elif not instance.is_opened:
+        notify_close_auction(descr, instance.winner, emails)
 
 
 @receiver(post_save, sender=Auction)
 def notify_post_save_auction(sender, instance, created, **kwargs):
     emails = User.objects.filter(is_active=True).values_list(
         'email', flat=True)
-    notify_auction_handler(instance.item_description, instance.current_price,
-                           list(emails), created)
+    notify_auction_handler(instance, list(emails), created)
 
 
 def create_token_handler(created, instance):
