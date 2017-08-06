@@ -10,6 +10,7 @@ class AuctionListSerializer(serializers.HyperlinkedModelSerializer):
         model = Auction
         fields = ('url', 'id', 'item_description', 'initial_price',
                   'current_price', 'price_step', 'close_at', 'owner')
+        extra_kwargs = {'url': {'view_name': 'auction_detail'}}
 
 
 class BidSerializer(serializers.ModelSerializer):

@@ -5,4 +5,4 @@ class AuctionConfig(AppConfig):
     name = 'auction'
 
     def ready(self):
-        import auction.signals
+        import auction.signals # noqa
