@@ -2,7 +2,8 @@ from auction.models import Auction, User
 from rest_framework.authtoken.models import Token
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from auction.tasks import notify_new_bid, notify_open_auction, notify_close_auction
+from auction.tasks import (notify_new_bid, notify_open_auction,
+                           notify_close_auction)
 
 
 def notify_auction_handler(instance, emails, created):
