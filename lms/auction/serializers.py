@@ -1,3 +1,5 @@
+from datetime import datetime
+import pytz
 from auction.models import Auction, Bid, User
 from rest_framework import serializers
 from rest_framework.serializers import ValidationError
@@ -9,8 +11,13 @@ class AuctionListSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Auction
         fields = ('url', 'id', 'item_description', 'initial_price',
-                  'current_price', 'price_step', 'close_at', 'owner')
+                  'price_step', 'close_at', 'owner')
         extra_kwargs = {'url': {'view_name': 'auction_detail'}}
+
+    def validate_close_at(self, value):
+        now = datetime.now(pytz.utc)
+        if value <= now:
+            raise ValidationError('Close date is in the past.')
 
 
 class BidSerializer(serializers.ModelSerializer):
@@ -38,10 +45,8 @@ class BidSerializer(serializers.ModelSerializer):
 
 
 class AuctionDetailSerializer(AuctionListSerializer):
-    bids = BidSerializer(source='bid_set', many=True)
-
     class Meta(AuctionListSerializer.Meta):
-        fields = AuctionListSerializer.Meta.fields + ('bids', )
+        fields = AuctionListSerializer.Meta.fields + ('bids', 'current_price')
 
 
 class UserSerializer(serializers.ModelSerializer):
