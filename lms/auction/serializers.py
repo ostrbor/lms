@@ -25,6 +25,7 @@ class AuctionCreateSerializer(serializers.ModelSerializer):
         now = datetime.now(pytz.utc)
         if value <= now:
             raise ValidationError('Close date is in the past.')
+        return value
 
 
 class BidDetailNestedSerializer(serializers.ModelSerializer):
