@@ -2,11 +2,12 @@
 
 ## INSTALLATION
 
-**Requirements**:
+**Requirements:**
 - pipenv install fabric3 
 - install docker
 - install docker-compose
 
+**Commands:**
 1. git pull
 
 2. fab build_dev
@@ -14,12 +15,19 @@
 3. edit .env file
 
 4. fab init_dev
+
 Will be asked to create superuser
 
 5. fab up_dev
 
 6. fab down
+
 To delete containers
+
+7. fab test 
+
+To run Unittests
+
 
 ## URLS SCHEMA
 **1.Create user**
@@ -44,7 +52,7 @@ Base64 authorization required
 
 POST, GET
 
-Token authorization required. [Authorization: Token <your-token>]
+Token authorization required. [Authorization: Token your-token]
 
 **4.Auction details**
 
@@ -52,7 +60,7 @@ Token authorization required. [Authorization: Token <your-token>]
 
 GET
 
-Token authorization required. [Authorization: Token <your-token>]
+Token authorization required. [Authorization: Token your-token]
 
 **5.Make bid**
 
@@ -60,4 +68,4 @@ Token authorization required. [Authorization: Token <your-token>]
 
 POST
 
-Token authorization required. [Authorization: Token <your-token>]
+Token authorization required. [Authorization: Token your-token]

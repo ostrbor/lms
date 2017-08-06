@@ -57,3 +57,8 @@ def shell():
 def down():
     with warn_only():
         local(DEVELOPMENT + 'down --remove-orphans')
+
+
+@task
+def test():
+    local(DEVELOPMENT + DJANGO_CMD + 'test')
