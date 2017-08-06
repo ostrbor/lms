@@ -35,6 +35,9 @@ class Bid(models.Model):
     auction = models.ForeignKey(Auction, related_name='bids')
     user = models.ForeignKey(User)
 
+    def __str__(self):
+        return f'{self.price} by {self.user.username}'
+
     @atomic
     def save(self, *args, **kwargs):
         self.auction.current_price = self.price

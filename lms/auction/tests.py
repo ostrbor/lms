@@ -2,7 +2,7 @@ from django.test import TestCase
 from unittest.mock import patch, MagicMock
 from auction.models import Auction, User, Bid
 from datetime import datetime
-from auction.serializers import BidSerializer
+from auction.serializers import BidCreateSerializer
 from rest_framework.serializers import ValidationError
 
 
@@ -40,7 +40,7 @@ class ModelsTestCase(TestCase):
         self.assertEqual(self.auction.current_price, bid.price)
 
 
-class BidSerializerTestCase(TestCase):
+class BidCreateSerializerTestCase(TestCase):
     def setUp(self):
         self.auction_owner = User.objects.create_user(
             username='Auction User',
@@ -60,27 +60,27 @@ class BidSerializerTestCase(TestCase):
         self.auction.is_opened = False
         self.auction.save()
         data = {'id': 1, 'price': 11, 'auction': 1}
-        ser = BidSerializer(data=data)
+        ser = BidCreateSerializer(data=data)
         with self.assertRaises(ValidationError):
             ser.is_valid(raise_exception=True)
 
     def test_validate_raises_same_auction_bid_user(self):
         data = {'id': 1, 'price': 11, 'auction': 1}
         request_mock = MagicMock(user=self.auction_owner)
-        ser = BidSerializer(data=data, context={'request': request_mock})
+        ser = BidCreateSerializer(data=data, context={'request': request_mock})
         with self.assertRaises(ValidationError):
             ser.is_valid(raise_exception=True)
 
     def test_validate_raises_bid_price_lower_auction_price(self):
         data = {'id': 1, 'price': 9, 'auction': 1}
         request_mock = MagicMock(user=self.bid_user)
-        ser = BidSerializer(data=data, context={'request': request_mock})
+        ser = BidCreateSerializer(data=data, context={'request': request_mock})
         with self.assertRaises(ValidationError):
             ser.is_valid(raise_exception=True)
 
     def test_validate_raises_not_used_price_step(self):
         data = {'id': 1, 'price': 11.5, 'auction': 1}
         request_mock = MagicMock(user=self.bid_user)
-        ser = BidSerializer(data=data, context={'request': request_mock})
+        ser = BidCreateSerializer(data=data, context={'request': request_mock})
         with self.assertRaises(ValidationError):
             ser.is_valid(raise_exception=True)

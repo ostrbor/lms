@@ -7,12 +7,19 @@ from rest_framework.serializers import ValidationError
 
 class AuctionListSerializer(serializers.HyperlinkedModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
+    winner = serializers.ReadOnlyField(source='winner.username')
 
     class Meta:
         model = Auction
-        fields = ('url', 'id', 'item_description', 'initial_price',
-                  'price_step', 'close_at', 'owner')
+        fields = '__all__'
         extra_kwargs = {'url': {'view_name': 'auction_detail'}}
+
+
+class AuctionCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Auction
+        fields = ('id', 'item_description', 'initial_price', 'price_step',
+                  'close_at')
 
     def validate_close_at(self, value):
         now = datetime.now(pytz.utc)
@@ -20,7 +27,24 @@ class AuctionListSerializer(serializers.HyperlinkedModelSerializer):
             raise ValidationError('Close date is in the past.')
 
 
-class BidSerializer(serializers.ModelSerializer):
+class BidDetailNestedSerializer(serializers.ModelSerializer):
+    username = serializers.ReadOnlyField(source='user.username')
+
+    class Meta:
+        model = Bid
+        fields = ('id', 'price', 'username')
+
+
+class AuctionDetailSerializer(serializers.ModelSerializer):
+    bids = BidDetailNestedSerializer(many=True)
+
+    class Meta:
+        model = Auction
+        fields = ('id', 'item_description', 'initial_price', 'current_price',
+                  'price_step', 'close_at', 'owner', 'bids', 'is_opened')
+
+
+class BidCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bid
         fields = ('id', 'price', 'auction')
@@ -35,21 +59,16 @@ class BidSerializer(serializers.ModelSerializer):
         current_price = auction.current_price
         price_step = auction.price_step
         if data['price'] <= current_price:
-            msg = 'Bid price is lower or equal to auction current price.'
+            msg = f'Bid price must be greater than current price '\
+                f'{current_price}'
             raise ValidationError(msg)
         if (data['price'] - current_price) % price_step != 0:
-            msg = 'The remainder of division of bid price and auction price '\
-                'step is not equal to zero.'
+            msg = f'Bid price = {current_price} + k*{price_step}'
             raise ValidationError(msg)
         return data
 
 
-class AuctionDetailSerializer(AuctionListSerializer):
-    class Meta(AuctionListSerializer.Meta):
-        fields = AuctionListSerializer.Meta.fields + ('bids', 'current_price')
-
-
-class UserSerializer(serializers.ModelSerializer):
+class UserCreateSerializer(serializers.ModelSerializer):
     email = serializers.EmailField()
 
     class Meta:
