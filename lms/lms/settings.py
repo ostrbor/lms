@@ -95,10 +95,21 @@ WSGI_APPLICATION = 'lms.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': get_env_var('POSTGRES_DB'),
+        'USER': get_env_var('POSTGRES_USER'),
+        'PASSWORD': get_env_var('POSTGRES_PASSWORD'),
+        'HOST': 'postgres',
+        'PORT': 5432,
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(REPO_DIR, 'db.sqlite3'),
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -153,17 +164,18 @@ REST_FRAMEWORK = {
     20,
 }
 
-# TODO: change backend for production
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
 # MAIL SETTINGS
+# TODO: change backend for production
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# TODO: change to production values
+# EMAIL_HOST_USER = 'noreply@mydomain.com'
+
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-# EMAIL_HOST_USER = get_env_var('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = get_env_var('EMAIL_HOST_PASSWORD')
-# TODO: change to production values
-EMAIL_HOST_USER = 'noreply@mydomain.com'
+EMAIL_HOST_USER = get_env_var('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = get_env_var('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # CELERY SETTINGS

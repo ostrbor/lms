@@ -1,0 +1,35 @@
+version: '2'
+
+services:
+
+  rabbitmq:
+    image: rabbitmq:3
+    ports:
+      - "5672:5672"
+
+  redis:
+    image: redis:3.2.8
+    ports:
+      - "6379:6379"
+
+  postgres:
+    image: postgres:9.6.2
+    logging:
+      options:
+        max-size: "50m"
+        max-file: "2"
+    ports:
+    - "5432:5432"
+
+  appserver_development:
+    build:
+      context: ..
+      dockerfile: Docker/Dockerfile-appserver
+      args:
+        requirements: development.txt
+    image: appserver:development
+    env_file: ../.env
+    volumes:
+      - ..:/usr/src/app
+    working_dir: /usr/src/app/lms
+    command: python manage.py runserver 0.0.0.0:8000

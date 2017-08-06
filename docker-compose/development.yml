@@ -1,0 +1,45 @@
+version: '2'
+
+services:
+
+  postgres:
+    extends:
+      file: common.yml
+      service: postgres
+    env_file: ../.env
+
+  rabbitmq:
+    extends:
+      file: common.yml
+      service: rabbitmq
+
+  redis:
+    extends:
+      file: common.yml
+      service: redis
+
+  appserver:
+    extends:
+      file: common.yml
+      service: appserver_development
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "0.0.0.0:8000:8000"
+
+  worker:
+    extends:
+      file: common.yml
+      service: appserver_development
+    # restart: always
+    user: celery
+    command: celery -A lms worker -l info
+
+  beat:
+    extends:
+      file: common.yml
+      service: appserver_development
+    # restart: always
+    user: celery
+    command: celery -A lms worker -B -l info
