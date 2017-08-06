@@ -8,8 +8,8 @@ class AuctionListSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Auction
-        fields = ('url', 'id', 'item_description', 'current_price',
-                  'price_step', 'close_at', 'owner')
+        fields = ('url', 'id', 'item_description', 'initial_price',
+                  'current_price', 'price_step', 'close_at', 'owner')
 
 
 class BidSerializer(serializers.ModelSerializer):

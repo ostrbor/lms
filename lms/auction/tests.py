@@ -13,7 +13,7 @@ class ModelsTestCase(TestCase):
         close_at = datetime.now()
         self.auction = Auction(
             item_description='item_description',
-            current_price=10,
+            initial_price=10,
             price_step=1,
             close_at=close_at,
             owner=self.user)
@@ -51,7 +51,7 @@ class BidSerializerTestCase(TestCase):
         close_at = datetime.now()
         self.auction = Auction.objects.create(
             item_description='item_description',
-            current_price=10,
+            initial_price=10,
             price_step=1,
             close_at=close_at,
             owner=self.auction_owner)
