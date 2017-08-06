@@ -1,5 +1,7 @@
 # Cool auction
+
 ## INSTALLATION
+
 **Requirements**:
 - pipenv install fabric3 
 - install docker
@@ -20,28 +22,42 @@ Will be asked to create superuser
 To delete containers
 
 ## URLS SCHEMA
-1.
+**1.Create user**
+
 *api/v1/users/*
+
 POST
-Create user.
-Available to all visitors. 
-2.
+
+Available to all visitors
+
+**2.Get token**
+
 *api/v1/tokens/*
+
 POST
-Get token.
-Base64 authorization required.
-3.
+
+Base64 authorization required
+
+**3.Create auction, view auctions**
+
 *api/v1/auctions/*
+
 POST, GET
-Create auction, view auctions.
-Token authorization required. [Authorization: Token <your-token>].
-4.
+
+Token authorization required. [Authorization: Token <your-token>]
+
+**4.Auction details**
+
 *api/v1/auctions/1/*
+
 GET
-Auction details.
-Token authorization required. [Authorization: Token <your-token>].
-5.
+
+Token authorization required. [Authorization: Token <your-token>]
+
+**5.Make bid**
+
 *api/v1/bids/*
+
 POST
-Make bid.
-Token authorization required. [Authorization: Token <your-token>].
+
+Token authorization required. [Authorization: Token <your-token>]
