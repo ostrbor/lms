@@ -9,12 +9,11 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-# TODO: replace Int with Decimal
 class Auction(models.Model):
     item_description = models.CharField(max_length=200)
-    initial_price = models.PositiveIntegerField()
-    current_price = models.PositiveIntegerField()
-    price_step = models.PositiveIntegerField()
+    initial_price = models.DecimalField(max_digits=11, decimal_places=2)
+    current_price = models.DecimalField(max_digits=11, decimal_places=2)
+    price_step = models.DecimalField(max_digits=11, decimal_places=2)
     close_at = models.DateTimeField()
     owner = models.ForeignKey(
         User, related_name='owner', on_delete=models.CASCADE)
@@ -35,9 +34,8 @@ class Auction(models.Model):
         super().save(*args, **kwargs)
 
 
-# TODO: replace Int with Decimal
 class Bid(models.Model):
-    price = models.PositiveIntegerField()
+    price = models.DecimalField(max_digits=11, decimal_places=2)
     auction = models.ForeignKey(Auction)
     user = models.ForeignKey(User)
 

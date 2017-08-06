@@ -1,4 +1,5 @@
-from auction.models import Auction, Bid, User
+from auction.models import Auction
+from auction.models import User
 from auction.serializers import (AuctionListSerializer, BidSerializer,
                                  AuctionDetailSerializer, UserSerializer)
 from rest_framework import generics
