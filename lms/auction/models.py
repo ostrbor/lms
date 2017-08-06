@@ -9,10 +9,10 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-# TODO: add base_price
 # TODO: replace Int with Decimal
 class Auction(models.Model):
     item_description = models.CharField(max_length=200)
+    initial_price = models.PositiveIntegerField()
     current_price = models.PositiveIntegerField()
     price_step = models.PositiveIntegerField()
     close_at = models.DateTimeField()
@@ -28,6 +28,11 @@ class Auction(models.Model):
 
     def __str__(self):
         return f'{self.item_description}'
+
+    def save(self, *args, **kwargs):
+        if self.pk is None:
+            self.current_price = self.initial_price
+        super().save(*args, **kwargs)
 
 
 # TODO: replace Int with Decimal
