@@ -1,8 +1,7 @@
 import pytz
 from datetime import datetime
-from auction.models import Auction, Bid
+from auction.models import Auction
 from django.core.mail import send_mail
-from django.db.models import Max
 from lms.celery import app
 from lms.settings import DEFAULT_FROM_EMAIL
 import logging

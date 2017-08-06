@@ -9,10 +9,10 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
-
+from __future__ import absolute_import
 import os
-
 from django.core.exceptions import ImproperlyConfigured
+from celery.schedules import crontab
 
 
 def get_env_var(var_name):
@@ -173,6 +173,14 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
+
+CELERYBEAT_SCHEDULE = {
+    'schedule-name': {
+        'task': 'auction.tasks.close_auctions',
+        'schedule': crontab(minute='*/1')
+    },
+}
+CELERYBEAT_SCHEDULE_FILENAME = os.path.join(REPO_DIR, 'resources/scheduler')
 
 LOGGING = {
     'version': 1,
