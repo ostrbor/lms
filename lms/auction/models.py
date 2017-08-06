@@ -44,19 +44,29 @@ class Bid(models.Model):
         super().save(*args, **kwargs)
 
 
-# TODO: rename to 'notify_auction'
-@receiver(post_save, sender=Auction)
-def auction(sender, instance, created, **kwargs):
-    emails = User.objects.filter(is_active=True).values_list(
-        'email', flat=True)
+def notify_auction_handler(title, current_price, emails, created):
+    # moved from receiver for testing
     # TODO: use delay to use async version of task
     if created:
-        notify_open_auction(instance.title, list(emails))
+        notify_open_auction(title, emails)
     else:
-        notify_new_bid(instance.title, instance.current_price, list(emails))
+        notify_new_bid(title, current_price, emails)
+
+
+@receiver(post_save, sender=Auction)
+def notify_post_save_auction(sender, instance, created, **kwargs):
+    emails = User.objects.filter(is_active=True).values_list(
+        'email', flat=True)
+    notify_auction_handler(instance.title, instance.current_price,
+                           list(emails), created)
+
+
+def create_token_handler(created, instance):
+    # moved from receiver for testing
+    if created:
+        Token.objects.create(user=instance)
 
 
 @receiver(post_save, sender=User)
-def create_auth_token(sender, instance=None, created=False, **kwargs):
-    if created:
-        Token.objects.create(user=instance)
+def create_token_post_save_user(sender, instance, created, **kwargs):
+    create_token_handler(created, instance)

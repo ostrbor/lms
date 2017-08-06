@@ -1,5 +1,6 @@
 from auction.models import Auction, Bid, User
 from rest_framework import serializers
+from rest_framework.serializers import ValidationError
 
 
 class AuctionListSerializer(serializers.HyperlinkedModelSerializer):
@@ -15,6 +16,24 @@ class BidSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bid
         fields = ('id', 'price', 'auction')
+
+    def validate(self, data):
+        auction = data['auction']
+        if not auction.is_opened:
+            raise ValidationError('Auction is closed.')
+        bid_user = self.context['request'].user
+        if bid_user == auction.owner:
+            raise ValidationError('Owner of auction can not bid.')
+        current_price = auction.current_price
+        price_step = auction.price_step
+        if data['price'] <= current_price:
+            msg = 'Bid price is lower or equal to auction current price.'
+            raise ValidationError(msg)
+        if (data['price'] - current_price) % price_step != 0:
+            msg = 'The remainder of division of bid price and auction price '\
+                'step is not equal to zero.'
+            raise ValidationError(msg)
+        return data
 
 
 class AuctionDetailSerializer(AuctionListSerializer):
