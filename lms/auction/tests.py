@@ -24,7 +24,7 @@ class ModelsTestCase(TestCase):
         self.auction.save()
         self.assertTrue(mock.called)
 
-    @patch('auction.models.notify_auction_handler')
+    @patch('auction.signals.notify_auction_handler')
     def test_signal_handler_notify_auction_triggered(self, mock):
         self.auction.save()
         self.assertTrue(mock.called)
