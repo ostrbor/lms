@@ -3,11 +3,15 @@ from django.dispatch import receiver
 from auction.tasks import notify_new_bid, notify_open_auction
 from rest_framework.authtoken.models import Token
 from django.db import models
+from django.db.transaction import atomic
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
 
+# TODO: replace title with description
+# TODO: add base_price
+# TODO: replace Int with Decimal
 class Auction(models.Model):
     title = models.CharField(max_length=200)
     current_price = models.PositiveIntegerField()
@@ -27,10 +31,17 @@ class Auction(models.Model):
         return f'{self.title}'
 
 
+# TODO: replace Int with Decimal
 class Bid(models.Model):
     price = models.PositiveIntegerField()
     auction = models.ForeignKey(Auction)
     user = models.ForeignKey(User)
+
+    @atomic
+    def save(self, *args, **kwargs):
+        self.auction.current_price = self.price
+        self.auction.save()
+        super().save(*args, **kwargs)
 
 
 # TODO: rename to 'notify_auction'
