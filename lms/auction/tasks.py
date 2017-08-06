@@ -9,21 +9,21 @@ logger = logging.getLogger(__name__)
 
 
 @app.task
-def notify_open_auction(title, to_emails: list):
-    msg = f'Auction {title} is opened.'
+def notify_open_auction(item_description, to_emails: list):
+    msg = f'Auction {item_description} is opened.'
     send_mail(SUBJECT, msg, DEFAULT_FROM_EMAIL, to_emails)
     logger.info(f'New auction, sent {len(to_emails)} emails.')
 
 
 @app.task
-def notify_new_bid(title, price, to_emails: list):
-    msg = f'Auction {title} has new price {price}.'
+def notify_new_bid(item_description, price, to_emails: list):
+    msg = f'Auction {item_description} has new price {price}.'
     send_mail(SUBJECT, msg, DEFAULT_FROM_EMAIL, to_emails)
     logger.info(f'New auction bid, sent {len(to_emails)} emails.')
 
 
 @app.task
-def notify_close_auction(title, winner, to_emails: list):
-    msg = f'Auction {title} is closed. Winner is {winner}.'
+def notify_close_auction(item_description, winner, to_emails: list):
+    msg = f'Auction {item_description} is closed. Winner is {winner}.'
     send_mail(SUBJECT, msg, DEFAULT_FROM_EMAIL, to_emails)
     logger.info(f'Auction closed, sent {len(to_emails)} emails.')

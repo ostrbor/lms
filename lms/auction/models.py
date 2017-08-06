@@ -9,11 +9,10 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-# TODO: replace title with description
 # TODO: add base_price
 # TODO: replace Int with Decimal
 class Auction(models.Model):
-    title = models.CharField(max_length=200)
+    item_description = models.CharField(max_length=200)
     current_price = models.PositiveIntegerField()
     price_step = models.PositiveIntegerField()
     close_at = models.DateTimeField()
@@ -28,7 +27,7 @@ class Auction(models.Model):
     is_opened = models.BooleanField(default=True, db_index=True)
 
     def __str__(self):
-        return f'{self.title}'
+        return f'{self.item_description}'
 
 
 # TODO: replace Int with Decimal
@@ -44,20 +43,20 @@ class Bid(models.Model):
         super().save(*args, **kwargs)
 
 
-def notify_auction_handler(title, current_price, emails, created):
+def notify_auction_handler(item_description, current_price, emails, created):
     # moved from receiver for testing
     # TODO: use delay to use async version of task
     if created:
-        notify_open_auction(title, emails)
+        notify_open_auction(item_description, emails)
     else:
-        notify_new_bid(title, current_price, emails)
+        notify_new_bid(item_description, current_price, emails)
 
 
 @receiver(post_save, sender=Auction)
 def notify_post_save_auction(sender, instance, created, **kwargs):
     emails = User.objects.filter(is_active=True).values_list(
         'email', flat=True)
-    notify_auction_handler(instance.title, instance.current_price,
+    notify_auction_handler(instance.item_description, instance.current_price,
                            list(emails), created)
 
 

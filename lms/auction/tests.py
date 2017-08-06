@@ -12,7 +12,7 @@ class ModelsTestCase(TestCase):
             username='User', password='123', email='user@gmail.com')
         close_at = datetime.now()
         self.auction = Auction(
-            title='title',
+            item_description='item_description',
             current_price=10,
             price_step=1,
             close_at=close_at,
@@ -50,7 +50,7 @@ class BidSerializerTestCase(TestCase):
             username='Bid User', password='123', email='biduser@gmail.com')
         close_at = datetime.now()
         self.auction = Auction.objects.create(
-            title='title',
+            item_description='item_description',
             current_price=10,
             price_step=1,
             close_at=close_at,
