@@ -6,25 +6,27 @@ from auction.tasks import (notify_new_bid, notify_open_auction,
                            notify_close_auction)
 
 
-def notify_auction_handler(instance, emails, created):
+def notify_auction_handler(instance, created):
     # moved from receiver for testing
-    # TODO: use delay to use async version of task
+    users = User.objects.filter(is_active=True)
     descr = instance.item_description
     if created:
-        notify_open_auction.delay(descr, emails)
+        auction_owner = instance.owner
+        emails = users.exclude(pk=auction_owner.pk).values_list(
+            'email', flat=True)
+        notify_open_auction.delay(descr, list(emails))
     elif instance.is_opened:
-        notify_new_bid.delay(descr, instance.current_price, emails)
+        bid_owner = instance.bids.latest('id').user
+        emails = users.exclude(pk=bid_owner.pk).values_list('email', flat=True)
+        notify_new_bid.delay(descr, instance.current_price, list(emails))
     elif not instance.is_opened:
-        notify_close_auction.delay(descr, instance.winner, emails)
+        emails = users.values_list('email', flat=True)
+        notify_close_auction.delay(descr, instance.winner, list(emails))
 
 
 @receiver(post_save, sender=Auction)
 def notify_post_save_auction(sender, instance, created, **kwargs):
-    auction_owner = instance.user
-    emails = User.objects.filter(is_active=True).exclude(
-        pk=auction_owner.pk).values_list(
-            'email', flat=True)
-    notify_auction_handler(instance, list(emails), created)
+    notify_auction_handler(instance, created)
 
 
 def create_token_handler(created, instance):

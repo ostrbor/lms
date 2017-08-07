@@ -50,7 +50,7 @@ def migrate():
 
 @task
 def shell():
-    local(f'python {BASE_DIR}/manage.py shell_plus')
+    local(DEVELOPMENT + DJANGO_CMD + 'shell_plus')
 
 
 @task
