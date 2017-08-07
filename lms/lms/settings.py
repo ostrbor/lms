@@ -113,7 +113,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# TODO: comment session authentication (use for debugging)
+# TODO: SessionAuthentication for debugging
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS':
     ('django_filters.rest_framework.DjangoFilterBackend', ),
@@ -127,7 +127,7 @@ REST_FRAMEWORK = {
 }
 
 # MAIL SETTINGS
-# TODO: change backend for production
+# TODO: This backend for debugging
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # TODO: change to production values
@@ -141,7 +141,7 @@ EMAIL_HOST_PASSWORD = get_env_var('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # CELERY SETTINGS
-# TODO: change result backend!
+# TODO: change result backend, celery deprecation!
 BROKER_URL = 'amqp://guest:guest@rabbitmq:5672//'
 CELERY_RESULT_BACKEND = 'amqp://guest:guest@rabbitmq:5672//'
 CELERY_ACCEPT_CONTENT = ['application/json']

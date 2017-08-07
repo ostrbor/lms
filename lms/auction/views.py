@@ -8,6 +8,9 @@ from rest_framework.permissions import AllowAny
 
 
 class UserCreate(generics.CreateAPIView):
+    """
+    post: Create user
+    """
     serializer_class = UserCreateSerializer
     permission_classes = (AllowAny, )
 
@@ -16,6 +19,10 @@ class UserCreate(generics.CreateAPIView):
 
 
 class AuctionListCreate(generics.ListCreateAPIView):
+    """
+    get: List auctions
+    post: Create auction
+    """
     queryset = Auction.objects.all()
     filter_fields = ('is_opened', )
 
@@ -30,11 +37,17 @@ class AuctionListCreate(generics.ListCreateAPIView):
 
 
 class AuctionDetail(generics.RetrieveAPIView):
+    """
+    get: Auction details
+    """
     queryset = Auction.objects.all()
     serializer_class = AuctionDetailSerializer
 
 
 class BidCreate(generics.CreateAPIView):
+    """
+    get: Create bid
+    """
     serializer_class = BidCreateSerializer
 
     def perform_create(self, serializer):
