@@ -27,6 +27,8 @@ class GeneralTestCase(TestCase):
             price_step=1,
             close_at=close_at,
             owner=self.auction_owner)
+        self.bid_user = User.objects.create_user(
+            username='Bid User', password='123', email='biduser@gmail.com')
 
 
 class SignalsTestCase(GeneralTestCase):
@@ -49,11 +51,6 @@ class SignalsTestCase(GeneralTestCase):
 
 
 class BidCreateSerializerTestCase(GeneralTestCase):
-    def setUp(self):
-        super().setUp()
-        self.bid_user = User.objects.create_user(
-            username='Bid User', password='123', email='biduser@gmail.com')
-
     def test_validate_raises_auction_closed(self):
         self.auction.is_opened = False
         self.auction.save()
@@ -84,11 +81,21 @@ class BidCreateSerializerTestCase(GeneralTestCase):
             ser.is_valid(raise_exception=True)
 
 
-class TaskTestCase(GeneralTestCase):
-    def test_close_auction_task(self):
+class CloseAuctionTaskTestCase(GeneralTestCase):
+    def setUp(self):
+        super().setUp()
         yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
         self.auction.close_at = yesterday
         self.auction.save()
+
+    def test_task_set_is_opened_to_false(self):
+        self.assertTrue(self.auction.is_opened)
         close_auctions()
         self.auction.refresh_from_db()
         self.assertFalse(self.auction.is_opened)
+
+    def test_task_set_winner(self):
+        Bid(user=self.bid_user, price=12, auction=self.auction).save()
+        close_auctions()
+        self.auction.refresh_from_db()
+        self.assertEqual(self.auction.winner, self.bid_user)
