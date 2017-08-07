@@ -20,8 +20,10 @@ def notify_auction_handler(instance, emails, created):
 
 @receiver(post_save, sender=Auction)
 def notify_post_save_auction(sender, instance, created, **kwargs):
-    emails = User.objects.filter(is_active=True).values_list(
-        'email', flat=True)
+    auction_owner = instance.user
+    emails = User.objects.filter(is_active=True).exclude(
+        pk=auction_owner.pk).values_list(
+            'email', flat=True)
     notify_auction_handler(instance, list(emails), created)
 
 
