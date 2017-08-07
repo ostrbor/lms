@@ -1,6 +1,6 @@
 import pytz
 from datetime import datetime
-from auction.models import Auction
+from auction.models import Auction, Bid
 from django.core.mail import send_mail
 from lms.celery import app
 from lms.settings import DEFAULT_FROM_EMAIL
@@ -39,6 +39,9 @@ def close_auctions():
     for auc in opened_auc:
         if auc.close_at < now:
             auc.is_opened = False
-            bid_user = auc.bids.get(price=auc.current_price).user
-            auc.winner = bid_user
+            try:
+                bid_user = auc.bids.get(price=auc.current_price).user
+                auc.winner = bid_user
+            except Bid.DoesNotExist:
+                pass
             auc.save()
