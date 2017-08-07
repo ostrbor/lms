@@ -6,7 +6,18 @@ from auction.serializers import BidCreateSerializer
 from rest_framework.serializers import ValidationError
 
 
-class ModelsTestCase(TestCase):
+class GeneralTestCase(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.email_patch = patch('auction.signals.notify_auction_handler')
+        cls.email = cls.email_patch.start()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.email_patch.stop()
+
+
+class ModelsTestCase(GeneralTestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             username='User', password='123', email='user@gmail.com')
@@ -20,17 +31,13 @@ class ModelsTestCase(TestCase):
 
     @patch('django.db.models.signals.post_save.send')
     def test_post_save_signal_triggered(self, mock):
-        # WARNING: check for all post_save signals
+        # NOTE: redundant test
         self.auction.save()
         self.assertTrue(mock.called)
 
-    @patch('auction.signals.notify_auction_handler')
-    def test_signal_handler_notify_auction_triggered(self, mock):
+    def test_signal_handler_notify_auction_triggered(self):
         self.auction.save()
-        self.assertTrue(mock.called)
-        self.auction.current_price = 11
-        self.auction.save()
-        self.assertEqual(mock.call_count, 2)
+        self.assertTrue(self.email.called)
 
     def test_bid_save_updates_auction_price(self):
         self.auction.save()
@@ -40,7 +47,7 @@ class ModelsTestCase(TestCase):
         self.assertEqual(self.auction.current_price, bid.price)
 
 
-class BidCreateSerializerTestCase(TestCase):
+class BidCreateSerializerTestCase(GeneralTestCase):
     def setUp(self):
         self.auction_owner = User.objects.create_user(
             username='Auction User',
