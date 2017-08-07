@@ -15,9 +15,15 @@ def get_env_var(var_name):
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO_DIR = os.path.dirname(BASE_DIR)
 
-SECRET_KEY = get_env_var('SECRET_KEY')
-
 DEBUG = True
+
+# Sometimes to run locally instead of in container
+LOCAL = False
+
+if LOCAL:
+    SECRET_KEY = 'some secret key'
+else:
+    SECRET_KEY = get_env_var('SECRET_KEY')
 
 ALLOWED_HOSTS = []
 
@@ -71,16 +77,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'lms.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': get_env_var('POSTGRES_DB'),
-        'USER': get_env_var('POSTGRES_USER'),
-        'PASSWORD': get_env_var('POSTGRES_PASSWORD'),
-        'HOST': 'postgres',
-        'PORT': 5432,
+if LOCAL:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': 'mydatabase',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': get_env_var('POSTGRES_DB'),
+            'USER': get_env_var('POSTGRES_USER'),
+            'PASSWORD': get_env_var('POSTGRES_PASSWORD'),
+            'HOST': 'postgres',
+            'PORT': 5432,
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -127,17 +141,17 @@ REST_FRAMEWORK = {
 }
 
 # MAIL SETTINGS
-# TODO: This backend for debugging
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-# TODO: change to production values
-# EMAIL_HOST_USER = 'noreply@mydomain.com'
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = get_env_var('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = get_env_var('EMAIL_HOST_PASSWORD')
+if LOCAL:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    EMAIL_HOST_USER = 'noreply@mydomain.com'
+    EMAIL_HOST_PASSWORD = 'password'
+else:
+    EMAIL_HOST_USER = get_env_var('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = get_env_var('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # CELERY SETTINGS
