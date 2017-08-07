@@ -11,11 +11,11 @@ def notify_auction_handler(instance, emails, created):
     # TODO: use delay to use async version of task
     descr = instance.item_description
     if created:
-        notify_open_auction(descr, emails)
+        notify_open_auction.delay(descr, emails)
     elif instance.is_opened:
-        notify_new_bid(descr, instance.current_price, emails)
+        notify_new_bid.delay(descr, instance.current_price, emails)
     elif not instance.is_opened:
-        notify_close_auction(descr, instance.winner, emails)
+        notify_close_auction.delay(descr, instance.winner, emails)
 
 
 @receiver(post_save, sender=Auction)
